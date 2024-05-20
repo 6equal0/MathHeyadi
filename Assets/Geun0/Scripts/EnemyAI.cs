@@ -20,6 +20,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private State states;
 
     [SerializeField] private float chaseRange = 2.5f;
+    [SerializeField] private float patrolRange = 4f;
 
     private void Awake()
     {
@@ -60,11 +61,19 @@ public class EnemyAI : MonoBehaviour
     private void ChaseUpdate()
     {
         agent.destination = player.transform.position;
+
+        if(Vector2.Distance(transform.position, player.transform.position) > patrolRange)
+        {
+            states = State.PATROL;
+        }
     }
 
     private void PatrolUpdate()
     {
-
+        if (Vector2.Distance(transform.position, player.transform.position) <= patrolRange)
+        {
+            states = State.CHASE;
+        }
     }
 
     private void ParalizedUpdate()
