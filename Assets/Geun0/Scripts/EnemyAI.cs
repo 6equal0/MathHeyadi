@@ -70,6 +70,8 @@ public class EnemyAI : MonoBehaviour
 
     private void PatrolUpdate()
     {
+
+
         if (Vector2.Distance(transform.position, player.transform.position) <= patrolRange)
         {
             states = State.CHASE;
