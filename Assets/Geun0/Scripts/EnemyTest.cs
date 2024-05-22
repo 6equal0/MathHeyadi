@@ -7,6 +7,7 @@ public class EnemyTest : MonoBehaviour
 {
     private NavMeshAgent agent;
     private Vector3 target;
+    private float angle;
 
     private void Awake()
     {
@@ -22,6 +23,5 @@ public class EnemyTest : MonoBehaviour
         }
 
         agent.destination = target;
-
     }
 }
