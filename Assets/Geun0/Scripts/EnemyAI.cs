@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -24,6 +25,11 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private Vector2 mapCenter;
     [SerializeField] private Vector2 mapSize;
+
+    [SerializeField] private Color chaseColor;
+    [SerializeField] private Color patrolColor;
+    [SerializeField] private Color paralizedColor;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -34,7 +40,9 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        // agent.destination = target;
+        agent.destination = target;
+        Debug.Log(agent.destination);
+        Debug.Log(target);
 
         switch (states)
         {
@@ -61,6 +69,7 @@ public class EnemyAI : MonoBehaviour
         if(Vector2.Distance(transform.position, player.transform.position) <= chaseRange)
         {
             states = State.CHASE;
+            transform.GetComponent<SpriteRenderer>().DOColor(Color.red, 1f).SetEase(Ease.OutQuint);
         }
     }
 
@@ -70,8 +79,8 @@ public class EnemyAI : MonoBehaviour
 
         if(Vector2.Distance(transform.position, player.transform.position) > patrolRange)
         {
-            target = transform.position;
             states = State.PATROL;
+            transform.GetComponent<SpriteRenderer>().DOColor(Color.yellow, 2f).SetEase(Ease.OutSine);
         }
     }
 
@@ -79,20 +88,12 @@ public class EnemyAI : MonoBehaviour
     {
         if (Vector2.Distance(transform.position, target) <= 0.7f)
         {
-            Debug.Log("목적지에 도착");
-            target = new Vector3(Random.Range(-(mapSize.x / 2), mapSize.x / 2), -(mapSize.y / 2), mapSize.y / 2);
-            Debug.Log(target);
-            Debug.Log(agent.destination);
-            Debug.Log(Vector2.Distance(transform.position, target));
-
-        }
-        else
-        {
-            Debug.Log("목적지로 가는중");
+            target = new Vector3(Random.Range(-(mapSize.x / 2), mapSize.x / 2), Random.Range(-(mapSize.y / 2), mapSize.y / 2), 0);
         }
 
         if (Vector2.Distance(transform.position, player.transform.position) <= patrolRange)
         {
+            transform.GetComponent<SpriteRenderer>().DOColor(Color.red, 1f).SetEase(Ease.OutQuint);
             states = State.CHASE;
         }
     }

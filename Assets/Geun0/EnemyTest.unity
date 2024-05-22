@@ -8404,7 +8404,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -8503,6 +8503,9 @@ MonoBehaviour:
   patrolRange: 4
   mapCenter: {x: 0, y: 0}
   mapSize: {x: 60, y: 32}
+  chaseColor: {r: 0, g: 0, b: 0, a: 0}
+  patrolColor: {r: 0, g: 0, b: 0, a: 0}
+  paralizedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &611754498
 GameObject:
   m_ObjectHideFlags: 0
