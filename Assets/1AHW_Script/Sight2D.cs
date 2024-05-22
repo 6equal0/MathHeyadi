@@ -58,7 +58,7 @@ public class Sight2D : MonoBehaviour
             {
                 findTarget = false; 
             }
-            if (angle <= m_horizontalViewHalfAngle)
+            else if (angle <= m_horizontalViewHalfAngle && hitedTarget.CompareTag("Player"))
             {
                 RaycastHit2D rayHitedTarget = Physics2D.Raycast(originPos, dir, m_viewRadius, m_viewObstacleMask);
                 if (rayHitedTarget)
