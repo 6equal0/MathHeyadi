@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
     private NavMeshAgent agent;
     private PlayerTest player;
     private CircleCollider2D col;
+    private Sight2D sight;
     private Vector3 target;
     private bool isParalized = false;
     private bool cantParalized = false;
@@ -51,6 +52,7 @@ public class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         player = FindObjectOfType<PlayerTest>();
         col = GetComponent<CircleCollider2D>();
+        sight = GetComponentInChildren<Sight2D>();
         target = transform.position;
         states = State.IDLE;
     }
@@ -58,7 +60,7 @@ public class EnemyAI : MonoBehaviour
     private void Update()
     {
         agent.destination = target;
-
+        Debug.Log(transform.right);
         InputTest();
 
         if (cantParalized)
