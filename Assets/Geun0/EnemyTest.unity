@@ -8480,7 +8480,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -8503,12 +8503,15 @@ MonoBehaviour:
   patrolRange: 4
   mapCenter: {x: 0, y: 0}
   mapSize: {x: 60, y: 32}
-  chaseColor: {r: 1, g: 1, b: 0, a: 1}
-  patrolColor: {r: 1, g: 0, b: 0, a: 1}
+  chaseColor: {r: 1, g: 0, b: 0, a: 1}
+  patrolColor: {r: 1, g: 1, b: 0, a: 1}
   paralizedColor: {r: 0, g: 0, b: 0, a: 1}
   paralizedTime1: 0.5
-  paralizedTime2: 3
-  paralizedTime3: 10
+  paralizedTime2: 1.5
+  paralizedTime3: 3
+  cantParalizedTime: 1
+  chaseSpeed: 6
+  patrolSpeed: 3
 --- !u!1 &611754498
 GameObject:
   m_ObjectHideFlags: 0

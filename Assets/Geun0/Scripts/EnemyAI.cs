@@ -8,10 +8,12 @@ public class EnemyAI : MonoBehaviour
 {
     private NavMeshAgent agent;
     private PlayerTest player;
+    private CircleCollider2D col;
     private Vector3 target;
     private bool isParalized = false;
+    private bool cantParalized = false;
     private float tempParalizedTime;
-    private float standardParalizedTime = 10f;
+    private float tempCantParalizedTime;
 
     private enum State
     {
@@ -39,10 +41,16 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float paralizedTime2 = 1.5f;
     [SerializeField] private float paralizedTime3 = 3f;
 
+    [SerializeField] private float cantParalizedTime = 1.5f;
+
+    [SerializeField] private float chaseSpeed = 6f;
+    [SerializeField] private float patrolSpeed = 3f;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         player = FindObjectOfType<PlayerTest>();
+        col = GetComponent<CircleCollider2D>();
         target = transform.position;
         states = State.IDLE;
     }
@@ -52,6 +60,16 @@ public class EnemyAI : MonoBehaviour
         agent.destination = target;
 
         InputTest();
+
+        if (cantParalized)
+        {
+            tempCantParalizedTime -= Time.deltaTime;
+
+            if(tempCantParalizedTime < 0)
+            {
+                cantParalized = false;
+            }
+        }
 
         switch (states)
         {
@@ -78,7 +96,7 @@ public class EnemyAI : MonoBehaviour
 
     private void InputTest()
     {
-        if (!isParalized)
+        if (!isParalized && !cantParalized)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -103,24 +121,27 @@ public class EnemyAI : MonoBehaviour
         //현우가 시야각 만들면 적용
         if(Vector2.Distance(transform.position, player.transform.position) <= chaseRange)
         {
+            transform.GetComponent<SpriteRenderer>().DOColor(chaseColor, 0.2f).SetEase(Ease.OutQuint);
             states = State.CHASE;
-            transform.GetComponent<SpriteRenderer>().DOColor(chaseColor, 1f).SetEase(Ease.OutQuint);
         }
     }
 
     private void ChaseUpdate()
     {
         target = player.transform.position;
+        agent.speed = chaseSpeed;
 
         if(Vector2.Distance(transform.position, player.transform.position) > patrolRange)
         {
+            transform.GetComponent<SpriteRenderer>().DOColor(patrolColor, 0.2f).SetEase(Ease.OutSine);
             states = State.PATROL;
-            transform.GetComponent<SpriteRenderer>().DOColor(patrolColor, 1f).SetEase(Ease.OutSine);
         }
     }
 
     private void PatrolUpdate()
     {
+        agent.speed = patrolSpeed;
+
         if (Vector2.Distance(transform.position, target) <= 0.7f)
         {
             target = new Vector3(Random.Range(-(mapSize.x / 2), mapSize.x / 2), Random.Range(-(mapSize.y / 2), mapSize.y / 2), 0);
@@ -128,7 +149,7 @@ public class EnemyAI : MonoBehaviour
 
         if (Vector2.Distance(transform.position, player.transform.position) <= patrolRange)
         {
-            transform.GetComponent<SpriteRenderer>().DOColor(chaseColor, 1f).SetEase(Ease.OutQuint);
+            transform.GetComponent<SpriteRenderer>().DOColor(chaseColor, 0.2f).SetEase(Ease.OutQuint);
             states = State.CHASE;
         }
     }
@@ -137,22 +158,29 @@ public class EnemyAI : MonoBehaviour
     {
         if (isParalized)
         {
-            tempParalizedTime -= (standardParalizedTime / paralizedTime1);
+            tempParalizedTime -= Time.deltaTime;
 
-            if(tempParalizedTime < 0)
+            if (tempParalizedTime < 0)
             {
                 isParalized = false;
-                tempParalizedTime = standardParalizedTime;
+
+                transform.GetComponent<SpriteRenderer>().color = patrolColor;
+
+                cantParalized = true;
+                tempCantParalizedTime = cantParalizedTime;
+
+                col.enabled = true;
 
                 states = State.PATROL;
-                transform.GetComponent<SpriteRenderer>().DOColor(patrolColor, 1f).SetEase(Ease.OutSine);
             }
         }
         else
         {
             isParalized = true;
-            agent.destination = transform.position;
-            transform.GetComponent<SpriteRenderer>().DOColor(paralizedColor, 0.5f).SetEase(Ease.OutQuint);
+            tempParalizedTime = paralizedTime1;
+            target = transform.position;
+            col.enabled = false;
+            transform.GetComponent<SpriteRenderer>().color = paralizedColor;
         }
     }
 
@@ -160,22 +188,29 @@ public class EnemyAI : MonoBehaviour
     {
         if (isParalized)
         {
-            tempParalizedTime -= (standardParalizedTime / paralizedTime2);
+            tempParalizedTime -= Time.deltaTime;
 
             if (tempParalizedTime < 0)
             {
                 isParalized = false;
-                tempParalizedTime = standardParalizedTime;
+
+                transform.GetComponent<SpriteRenderer>().color = patrolColor;
+
+                cantParalized = true;
+                tempCantParalizedTime = cantParalizedTime;
+
+                col.enabled = true;
 
                 states = State.PATROL;
-                transform.GetComponent<SpriteRenderer>().DOColor(patrolColor, 1f).SetEase(Ease.OutSine);
             }
         }
         else
         {
             isParalized = true;
-            agent.destination = transform.position;
-            transform.GetComponent<SpriteRenderer>().DOColor(paralizedColor, 0.5f).SetEase(Ease.OutSine);
+            tempParalizedTime = paralizedTime2;
+            target = transform.position;
+            col.enabled = false;
+            transform.GetComponent<SpriteRenderer>().color = paralizedColor;
         }
     }
 
@@ -183,22 +218,29 @@ public class EnemyAI : MonoBehaviour
     {
         if (isParalized)
         {
-            tempParalizedTime -= (standardParalizedTime / paralizedTime3);
+            tempParalizedTime -= Time.deltaTime;
 
             if (tempParalizedTime < 0)
             {
                 isParalized = false;
-                tempParalizedTime = standardParalizedTime;
+
+                transform.GetComponent<SpriteRenderer>().color = patrolColor;
+
+                cantParalized = true;
+                tempCantParalizedTime = cantParalizedTime;
+
+                col.enabled = true;
 
                 states = State.PATROL;
-                transform.GetComponent<SpriteRenderer>().DOColor(patrolColor, 1f).SetEase(Ease.OutSine);
             }
         }
         else
         {
             isParalized = true;
-            agent.destination = transform.position;
-            transform.GetComponent<SpriteRenderer>().DOColor(paralizedColor, 0.5f).SetEase(Ease.OutSine);
+            tempParalizedTime = paralizedTime3;
+            target = transform.position;
+            col.enabled = false;
+            transform.GetComponent<SpriteRenderer>().color = paralizedColor;
         }
     }
 
