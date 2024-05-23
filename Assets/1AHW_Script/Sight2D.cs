@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sight2D : MonoBehaviour
 {
     Vector2 playerTarget;
-    [SerializeField] private bool findTarget= false;
+    public bool findTarget= false;
     [SerializeField] private bool m_bDebugMode = false;
 
     [Header("View Config")]

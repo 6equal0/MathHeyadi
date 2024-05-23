@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
     private NavMeshAgent agent;
     private PlayerTest player;
     private CircleCollider2D col;
+    private Sight2D sight;
     private Vector3 target;
     private bool isParalized = false;
     private bool cantParalized = false;
@@ -46,19 +47,29 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float chaseSpeed = 6f;
     [SerializeField] private float patrolSpeed = 3f;
 
+    [SerializeField] private GameObject sightObject;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         player = FindObjectOfType<PlayerTest>();
         col = GetComponent<CircleCollider2D>();
+        sight = GetComponentInChildren<Sight2D>();
         target = transform.position;
         states = State.IDLE;
     }
 
     private void Update()
     {
-        agent.destination = target;
+        /*Vector3 direction = agent.desiredVelocity;
+        float angle = Mathf.Atan2(direction.y - transform.position.y, direction.x - transform.position.x) * Mathf.Rad2Deg;
+        sightObject.transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);*/
 
+        Vector3 dir = agent.velocity.normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        sightObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
+
+        agent.destination = target;
         InputTest();
 
         if (cantParalized)
