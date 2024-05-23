@@ -7,7 +7,7 @@ using DG.Tweening;
 public class EnemyAI : MonoBehaviour
 {
     private NavMeshAgent agent;
-    private PlayerTest player;
+    private PlayerMove player;
     private CircleCollider2D col;
     private Sight2D sight;
     private Vector3 target;
@@ -28,7 +28,6 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private State states;
 
-    [SerializeField] private float chaseRange = 2.5f;
     [SerializeField] private float patrolRange = 4f;
 
     [SerializeField] private Vector2 mapCenter;
@@ -52,7 +51,7 @@ public class EnemyAI : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        player = FindObjectOfType<PlayerTest>();
+        player = FindObjectOfType<PlayerMove>();
         col = GetComponent<CircleCollider2D>();
         sight = GetComponentInChildren<Sight2D>();
         target = transform.position;
@@ -130,7 +129,7 @@ public class EnemyAI : MonoBehaviour
         target = transform.position;
 
         //현우가 시야각 만들면 적용
-        if(Vector2.Distance(transform.position, player.transform.position) <= chaseRange)
+        if(sight.findTarget)
         {
             transform.GetComponent<SpriteRenderer>().DOColor(chaseColor, 0.2f).SetEase(Ease.OutQuint);
             states = State.CHASE;
@@ -158,7 +157,7 @@ public class EnemyAI : MonoBehaviour
             target = new Vector3(Random.Range(-(mapSize.x / 2), mapSize.x / 2), Random.Range(-(mapSize.y / 2), mapSize.y / 2), 0);
         }
 
-        if (Vector2.Distance(transform.position, player.transform.position) <= patrolRange)
+        if (sight.findTarget)
         {
             transform.GetComponent<SpriteRenderer>().DOColor(chaseColor, 0.2f).SetEase(Ease.OutQuint);
             states = State.CHASE;
@@ -258,10 +257,7 @@ public class EnemyAI : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, chaseRange);
-        Gizmos.color = Color.red;
         Gizmos.DrawWireCube(mapCenter, mapSize);
-        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(target, 1);
         Gizmos.DrawWireSphere(transform.position, patrolRange);
     }
