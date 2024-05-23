@@ -65,17 +65,11 @@ public class EnemyAI : MonoBehaviour
         float angle = Mathf.Atan2(direction.y - transform.position.y, direction.x - transform.position.x) * Mathf.Rad2Deg;
         sightObject.transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);*/
 
-        if (agent.velocity.sqrMagnitude > 0.1f) // 에이전트가 이동 중일 때만 회전
-        {
-            // 이동 방향
-            Vector3 direction = agent.velocity.normalized;
-
-            // 자식 오브젝트를 이동 방향으로 회전
-            sightObject.transform.rotation = Quaternion.LookRotation(direction);
-        }
+        Vector3 dir = agent.velocity.normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        sightObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
 
         agent.destination = target;
-        Debug.Log(transform.right);
         InputTest();
 
         if (cantParalized)
