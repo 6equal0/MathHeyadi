@@ -1,46 +1,30 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHpBar : MonoBehaviour
 {
-    public Scrollbar healthBar;
-    public int maxHealth = 100;
-    public GameObject enemy;
+    public Slider healthBar;
+    public int startingHealth = 100;
+    public int maxHealth = 200;
+    public int recoveryRate = 5;
+    public int recoveryInterval = 10;
 
     private int currentHealth;
 
     void Start()
     {
-        currentHealth = maxHealth;
-        UpdateHealthBar();
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject == enemy)
-        {
-            TakeDamage(10);
-        }
+        currentHealth = startingHealth;
+        healthBar.value = currentHealth;
     }
 
     public void TakeDamage(int damage)
     {
+        healthBar.value = currentHealth;
         currentHealth -= damage;
-        if (currentHealth < 0)
+        if (currentHealth <= 0)
         {
             currentHealth = 0;
-        }
-        UpdateHealthBar();
-
-        if (currentHealth == 0)
-        {
             Debug.Log("플레이어 사망");
         }
-    }
-
-    void UpdateHealthBar()
-    {
-        healthBar.size = (float)currentHealth / maxHealth;
-        healthBar.value = currentHealth / (float)maxHealth * 100;
     }
 }

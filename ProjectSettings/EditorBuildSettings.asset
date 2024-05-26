@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Junpyo/02.TestScene/EndTheme.unity
     guid: d2613734c076ce84b83b1e58ac112e2b
+  - enabled: 1
+    path: Assets/Junpyo/02.TestScene/GameClear.unity
+    guid: df94649e6f9a59d49a81cad4e932e5af
   m_configObjects: {}

@@ -10,7 +10,8 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(damage);
+            print("a");
+            collision.gameObject.GetComponent<PlayerHpBar>().TakeDamage(damage);
         }
     }
 }
