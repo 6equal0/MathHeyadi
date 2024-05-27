@@ -6,7 +6,7 @@ using TMPro;
 public class ItemManager : MonoBehaviour
 {
     PlayerTest player;
-    [SerializeField] TextMeshProUGUI speedTXT;
+    //[SerializeField] TextMeshProUGUI speedTXT;
 
     private void Start()
     {
@@ -14,6 +14,6 @@ public class ItemManager : MonoBehaviour
     }
     private void Update()
     {
-        speedTXT.text = "Speed: " + player.moveSpeed.ToString();
+        //speedTXT.text = "Speed: " + player.moveSpeed.ToString();
     }
 }

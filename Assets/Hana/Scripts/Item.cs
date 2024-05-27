@@ -10,13 +10,13 @@ public enum ItemType
 public class Item : MonoBehaviour
 {
     public ItemType itemType;
-    PlayerTest player;
-    float speedUp = 2f;
+    private PlayerMove player;
+    [SerializeField] private float speedUp = 2f;
     [SerializeField] AudioSource speedUpSound;
 
     private void Start()
     {
-        player = FindObjectOfType<PlayerTest>();
+        player = FindObjectOfType<PlayerMove>();
         speedUpSound = GetComponent<AudioSource>();
     }
     private void OnTriggerEnter2D(Collider2D collision)
