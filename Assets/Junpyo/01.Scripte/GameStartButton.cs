@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class GameStartButton : MonoBehaviour
 {
-    public void ChangeScene()
+    public void ChangeScene(string sceneName)
     {
-        SceneManager.LoadScene("TestInGameScene");
+        SceneManager.LoadScene(sceneName);
     }
 }

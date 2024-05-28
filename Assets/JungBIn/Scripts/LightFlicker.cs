@@ -9,6 +9,8 @@ public class LightFlicker : MonoBehaviour
     public float flickerSpeed = 1f; // ±ôºý ¼Óµµ
     public float minIntensity = 0.5f;
     public float maxIntensity = 1.5f;
+
+    public bool batteryLow = false;
     void Start()
     {
         if(light2D == null)
@@ -19,7 +21,10 @@ public class LightFlicker : MonoBehaviour
 
     void Update()
     {
-        float intensity = minIntensity + (maxIntensity - minIntensity) * 0.5f * (1 + Mathf.Sin(Time.time * flickerSpeed));
-        light2D.intensity = intensity;
+        if (batteryLow)
+        {
+            float intensity = minIntensity + (maxIntensity - minIntensity) * 0.5f * (1 + Mathf.Sin(Time.time * flickerSpeed));
+            light2D.intensity = intensity;
+        }
     }
 }
