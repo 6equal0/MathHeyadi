@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sight2D : MonoBehaviour
 {
     Vector2 playerTarget;
-    public bool findTarget= false;
+    [SerializeField] public bool findTarget = false;   // 플레이어 오브젝트 발견 여부
     [SerializeField] private bool m_bDebugMode = false;
 
     [Header("View Config")]
@@ -13,7 +13,7 @@ public class Sight2D : MonoBehaviour
     [SerializeField] private float m_horizontalViewAngle = 0f;
     [SerializeField] private float m_viewRadius = 1f;
     [Range(-180f, 180f)]
-    [SerializeField] private float m_viewRotateZ = 0f;  //추후 적 오브젝트가 바라보는 각도 입력해주면 될듯
+    [SerializeField] private float m_viewRotateZ = 0f;  // 추후 적 오브젝트가 바라보는 각도 입력해주면 될듯
 
     [SerializeField] private LayerMask m_viewTargetMask;
     [SerializeField] private LayerMask m_viewObstacleMask;
@@ -33,8 +33,6 @@ public class Sight2D : MonoBehaviour
         return new Vector3(Mathf.Sin(radian), Mathf.Cos(radian), 0f);
     }
 
-   
-
     public Collider2D[] FindViewTargets()
     {
         hitedTargetContainer.Clear();
@@ -48,28 +46,40 @@ public class Sight2D : MonoBehaviour
             Vector2 dir = (targetPos - originPos).normalized;
             Vector2 lookDir = AngleToDirZ(m_viewRotateZ);
 
-            // float angle = Vector3.Angle(lookDir, dir)
-            // 아래 두 줄은 위의 코드와 동일하게 동작함. 내부 구현도 동일
             float dot = Vector2.Dot(lookDir, dir);
             float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
 
-
-            if (angle>=m_horizontalViewAngle)
+            if (angle >= m_horizontalViewAngle) // 범위 안에 아무것도 없을 때
             {
-                findTarget = false; 
+                findTarget = false;
             }
-            else if (angle <= m_horizontalViewHalfAngle && hitedTarget.CompareTag("Player"))
+            else if (angle <= m_horizontalViewHalfAngle && hitedTarget.CompareTag("Player")) // 범위 안에 Player 태그를 가진 오브젝트가 있을 때
             {
                 RaycastHit2D rayHitedTarget = Physics2D.Raycast(originPos, dir, m_viewRadius, m_viewObstacleMask);
                 if (rayHitedTarget)
                 {
-                    if (m_bDebugMode)
+                    // 벽이 목표물보다 앞에 있는지 확인
+                    float distanceToObstacle = rayHitedTarget.distance;
+                    float distanceToTarget = Vector2.Distance(originPos, targetPos);
+
+                    if (distanceToObstacle < distanceToTarget)
                     {
-                        Debug.DrawLine(originPos, rayHitedTarget.point, Color.yellow);
+                        if (m_bDebugMode)
+                        {
+                            Debug.DrawLine(originPos, rayHitedTarget.point, Color.yellow);
+                        }
                         findTarget = false;
                     }
-                        
-
+                    else
+                    {
+                        hitedTargetContainer.Add(hitedTarget);
+                        if (m_bDebugMode)
+                        {
+                            Debug.DrawLine(originPos, targetPos, Color.red);
+                            playerTarget = targetPos;
+                            findTarget = true;
+                        }
+                    }
                 }
                 else
                 {
@@ -77,17 +87,10 @@ public class Sight2D : MonoBehaviour
                     if (m_bDebugMode)
                     {
                         Debug.DrawLine(originPos, targetPos, Color.red);
-                        playerTarget = targetPos; 
+                        playerTarget = targetPos;
                         findTarget = true;
-                        //StartCoroutine("ToPlayer");
                     }
-                    else
-                    {
-                        findTarget = false;
-                    }
-                        
                 }
-               
             }
         }
 
@@ -127,15 +130,6 @@ public class Sight2D : MonoBehaviour
             Vector2 ene = gameObject.transform.position;
             ene = playerTarget - ene;
             gameObject.transform.position = ene;
-            
         }
-        
     }
-    
-
-
-
 }
-
-
-

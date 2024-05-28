@@ -27,7 +27,7 @@ public class Item : MonoBehaviour
             {
                 case ItemType.SpeedUp:
                     speedUpSound.Play();
-                    player.moveSpeed += speedUp;
+                    player.SpeedUp(speedUp);
                     Destroy(gameObject, .3f);
                     break;
             }

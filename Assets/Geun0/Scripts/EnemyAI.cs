@@ -10,6 +10,7 @@ public class EnemyAI : MonoBehaviour
     private PlayerMove player;
     private CircleCollider2D col;
     private Sight2D sight;
+
     private Vector3 target;
     private bool isParalized = false;
     private bool cantParalized = false;
@@ -45,6 +46,8 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private float chaseSpeed = 6f;
     [SerializeField] private float patrolSpeed = 3f;
+
+    [SerializeField] private float damage = 10f;
 
     [SerializeField] private GameObject sightObject;
 
@@ -154,7 +157,8 @@ public class EnemyAI : MonoBehaviour
 
         if (Vector2.Distance(transform.position, target) <= 0.7f)
         {
-            target = new Vector3(Random.Range(-(mapSize.x / 2), mapSize.x / 2), Random.Range(-(mapSize.y / 2), mapSize.y / 2), 0);
+            target = new Vector3(Random.Range(-(mapSize.x / 2), mapSize.x / 2) + mapCenter.x, 
+                Random.Range(-(mapSize.y / 2), mapSize.y / 2) + mapCenter.y, 0);
         }
 
         if (sight.findTarget)
@@ -260,5 +264,13 @@ public class EnemyAI : MonoBehaviour
         Gizmos.DrawWireCube(mapCenter, mapSize);
         Gizmos.DrawWireSphere(target, 1);
         Gizmos.DrawWireSphere(transform.position, patrolRange);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            collision.GetComponent<PlayerMove>().TakeDamage(10);
+        }
     }
 }
